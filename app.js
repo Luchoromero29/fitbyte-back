@@ -7,8 +7,9 @@ import cookieParser from 'cookie-parser';
 import { PORT, JWT_SECRET_KEY, SALT_ROUNDS } from './config/config.js';
 import db from './config/db.js';
 import userRouter from './routes/userRoutes.js';
-import loginRouter from './routes/loginRoutes.js';
+import singinRouter from './routes/singinRoutes.js';
 import { Rol, User } from './models/index.js';
+
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
 
   try {
     if (token) {
-      const data = jwt.verify(token, SECRET_JWT_KEY);
+      const data = jwt.verify(token, JWT_SECRET_KEY);
       req.session.user = data;
     }
   } catch (error) {
@@ -115,7 +116,7 @@ db.authenticate()
 
 // Rutas
 app.use('/api',cors(corsOptions), userRouter);
-app.use('/api',cors(corsOptions), loginRouter);
+app.use('/api',cors(corsOptions), singinRouter);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

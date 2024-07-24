@@ -6,24 +6,27 @@ import { SALT_ROUNDS } from '../config/config.js';
 // Crear un nuevo usuario
 export const createUser = async (req, res) => {
   try {
-
+    
     const { name, lastname, email, password, weight, height, unit, birthdate  } = req.body;
     const rolId = 2
     const BMI = calcBMI(weight, height)
     const active = true
-
-    if (!validationPassword) throw new Error() 
-    if (existEmail) throw new Error("El email ya esta registrado") 
-
+   
+    if (!validationPassword(password)) throw new Error() 
+      
+    //if (existEmail(email)) throw new Error("El email ya esta registrado") 
+  
     //hasheo de password
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
+
+
 
     const newUser = await User.create({ 
       rolId,
       name, 
       lastname, 
       email, 
-      hashedPassword, 
+      password: hashedPassword, 
       weight, 
       height, 
       unit, 
@@ -126,6 +129,7 @@ const calcBMI = (weight, height) => {
 }
 
 const validationPassword = (password) => {
+
   if (typeof password !== "string") throw new Error('La contraseña debe ser una cadeba de texto')
   if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres de largo')
   const regex = /\d/
@@ -133,6 +137,9 @@ const validationPassword = (password) => {
   return true;
 }
 
-const existEmail = (email) => {
-  return User.findOne({where: {email: email}})
+const existEmail = async (email) => {
+  
+  const exist = await User.findOne({where: {email: email}})
+  
+  return exist
 }

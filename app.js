@@ -4,6 +4,7 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 
+
 import { PORT, JWT_SECRET_KEY, SALT_ROUNDS } from './config/config.js';
 import db from './config/db.js';
 import userRouter from './routes/userRoutes.js';
@@ -115,6 +116,8 @@ db.authenticate()
 //     });
 
 // Rutas
+
+
 app.use('/api',cors(corsOptions), userRouter);
 app.use('/api',cors(corsOptions), singinRouter);
 

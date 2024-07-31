@@ -7,7 +7,7 @@ import { JWT_SECRET_KEY, NODE_ENV } from '../config/config.js';
 //funcion de login 
 export const login = async (req, res) => {
   try {
-
+    
     //recuperamos datos del login
     const { email, password } = req.body;
 
@@ -15,10 +15,9 @@ export const login = async (req, res) => {
     //verificamos existencia y contrasenia correcta
     const user = await User.findOne({ where: { email: email } });
     if (!user) throw new Error('Email no registrado');
-    
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) throw new Error('Contraseña incorrecta');
-    console.log("Hola");
+    
     //creamos el payload de datos para el token, con user y iat(mometno de creacion del token), exp(momento de expiracion del token)
     const payload = { 
       user: user
@@ -27,7 +26,7 @@ export const login = async (req, res) => {
     const token = jwt.sign(payload, JWT_SECRET_KEY, {
       expiresIn: '1h',
     });
-  
+    
     //lo guardamos a travez de la cookie
     res
       .cookie('access_token', token, {

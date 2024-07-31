@@ -11,9 +11,8 @@ export const createUser = async (req, res) => {
     const rolId = 2
     const BMI = calcBMI(weight, height)
     const active = true
-   
-    if (!validationPassword(password)) throw new Error() 
-      
+    
+    validationPassword(password); 
     //if (existEmail(email)) throw new Error("El email ya esta registrado") 
   
     //hasheo de password
@@ -36,7 +35,7 @@ export const createUser = async (req, res) => {
     });
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ message: 'Error al crear el usuario', error });
+    res.status(500).json({ message: error.message ||  'Error al crear el usuario' });
   }
 };
 
@@ -83,6 +82,7 @@ export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, lastname, email, password, weight, height, unit, birthdate } = req.body;
+    validationPassword(password); 
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -102,7 +102,7 @@ export const updateUser = async (req, res) => {
     await user.save();
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar el usuario', error });
+    res.status(500).json({ message: error.message ||  'Error al actualizar el usuario' });
   }
 };
 

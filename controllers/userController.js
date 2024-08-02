@@ -1,41 +1,38 @@
 import bcrypt from 'bcrypt';
-
 import { User } from '../models/index.js';
 import { SALT_ROUNDS } from '../config/config.js';
 
 // Crear un nuevo usuario
 export const createUser = async (req, res) => {
   try {
-    
-    const { name, lastname, email, password, weight, height, unit, birthdate  } = req.body;
-    const rolId = 2
-    const BMI = calcBMI(weight, height)
-    const active = true
-    
-    validationPassword(password); 
-    //if (existEmail(email)) throw new Error("El email ya esta registrado") 
-  
-    //hasheo de password
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
+    const { name, lastname, email, password, weight, height, unit, birthdate } = req.body;
+    const rolId = 2;
+    const BMI = calcBMI(weight, height);
+    const active = true;
 
+    await validationPassword(password);
+    await existEmail(email);
 
+    // Hash de password
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-    const newUser = await User.create({ 
+    const newUser = await User.create({
       rolId,
-      name, 
-      lastname, 
-      email, 
-      password: hashedPassword, 
-      weight, 
-      height, 
-      unit, 
+      name,
+      lastname,
+      email,
+      password: hashedPassword,
+      weight,
+      height,
+      unit,
       birthdate,
       BMI,
       active
     });
+
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ message: error.message ||  'Error al crear el usuario' });
+    res.status(400).json({ message: error.message || 'Error al crear el usuario' });
   }
 };
 
@@ -66,7 +63,7 @@ export const getUserById = async (req, res) => {
 export const getUserByEmail = async (req, res) => {
   try {
     const { email } = req.params;
-    const user = await User.findOne({where: {email: email}});
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
@@ -76,13 +73,11 @@ export const getUserByEmail = async (req, res) => {
   }
 };
 
-
-
 export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, lastname, email, password, weight, height, unit, birthdate } = req.body;
-    validationPassword(password); 
+    await validationPassword(password);
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
@@ -102,12 +97,9 @@ export const updateUser = async (req, res) => {
     await user.save();
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message ||  'Error al actualizar el usuario' });
+    res.status(500).json({ message: error.message || 'Error al actualizar el usuario' });
   }
 };
-
-
-
 
 // Eliminar un usuario
 export const deleteUser = async (req, res) => {
@@ -125,21 +117,19 @@ export const deleteUser = async (req, res) => {
 };
 
 const calcBMI = (weight, height) => {
-  return (weight / (height ** 2))
-}
+  return weight / (height ** 2);
+};
 
 const validationPassword = (password) => {
-
-  if (typeof password !== "string") throw new Error('La contraseña debe ser una cadeba de texto')
-  if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres de largo')
-  const regex = /\d/
-  if (!regex.test(password)) throw new Error ('La contraseña debe tener al menos 1 numero')
+  if (typeof password !== "string") throw new Error('La contraseña debe ser una cadena de texto');
+  if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres de largo');
+  const regex = /\d/;
+  if (!regex.test(password)) throw new Error('La contraseña debe tener al menos 1 número');
   return true;
-}
+};
 
 const existEmail = async (email) => {
-  
-  const exist = await User.findOne({where: {email: email}})
-  
-  return exist
-}
+  const exist = await User.findOne({ where: { email } });
+  if (exist) throw new Error('Email ya registrado');
+  return exist;
+};

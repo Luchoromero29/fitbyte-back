@@ -9,6 +9,7 @@ import { PORT, JWT_SECRET_KEY, SALT_ROUNDS } from './config/config.js';
 import db from './config/db.js';
 import userRouter from './routes/userRoutes.js';
 import singinRouter from './routes/singinRoutes.js';
+import categoryRouter from './routes/categoryRoutes.js';
 import { Rol, User } from './models/index.js';
 
 
@@ -56,6 +57,7 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 };
+app.use(cors(corsOptions));
 
 //app.use(cors(corsOptions));
 
@@ -120,6 +122,7 @@ db.authenticate()
 
 app.use('/api',cors(corsOptions), userRouter);
 app.use('/api',cors(corsOptions), singinRouter);
+app.use('/api',cors(corsOptions), categoryRouter);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

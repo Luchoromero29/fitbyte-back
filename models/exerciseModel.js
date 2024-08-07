@@ -15,7 +15,7 @@ const Exercise = db.define('Exercise', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    img: {
+    urlImage: {
         type: DataTypes.STRING,
         allowNull: false,
     },

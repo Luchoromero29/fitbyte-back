@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv'
 
 
 import { PORT, JWT_SECRET_KEY, SALT_ROUNDS } from './config/config.js';
@@ -10,9 +11,13 @@ import db from './config/db.js';
 import userRouter from './routes/userRoutes.js';
 import singinRouter from './routes/singinRoutes.js';
 import categoryRouter from './routes/categoryRoutes.js';
-import { Rol, User } from './models/index.js';
+import { Rol, User, Category, BodyPart } from './models/index.js';
+import bodyPartRouter from './routes/bodyPartRoutes.js';
+import exerciseRouter from './routes/exerciseRoutes.js';
+import isAuth from './middlewares/auth.js';
 
 
+dotenv.config();
 const app = express();
 
 // Middleware
@@ -66,6 +71,8 @@ const initializeRoles = async () => {
   await Rol.findOrCreate({ where: { name: 'ADMIN' } });
   await Rol.findOrCreate({ where: { name: 'USER' } });
 
+  const categories = ["Mancuernas", "Barra", "Ketbel", "Maquina", "Peso corporal", "Cardio"]
+  const bodyparts = ["Biceps", "Triceps", "Pectoral", "Espalda", "Cuadriceps", "Piernas", "Isquiotibiales", "Gemelos", "Antebrazos", "Hombros", "Gluteos", "Abdominales", "Trapecio"]
   const hashedPassword = await bcrypt.hash('root', SALT_ROUNDS);
 
   await User.findOrCreate({
@@ -83,6 +90,26 @@ const initializeRoles = async () => {
       active: true
     },
   });
+
+  for(let i = 0 ; i < categories.length ; i++){
+    cargarCategorias(categories[i])
+  }
+
+  async function cargarCategorias(name) {
+    await Category.create({
+      name: name
+    })
+  }
+
+  for(let i = 0 ; i < bodyparts.length ; i++){
+    cargarBodyPart(bodyparts[i])
+  }
+
+  async function cargarBodyPart(name) {
+    await BodyPart.create({
+      name: name
+    })
+  }
 };
 
 // Sincronizar base de datos
@@ -118,11 +145,15 @@ db.authenticate()
 //     });
 
 // Rutas
-
+app.get('/api/verify-auth', isAuth, (req, res) => {
+  res.status(200).json({ user: req.user, token: req.token });
+});
 
 app.use('/api',cors(corsOptions), userRouter);
 app.use('/api',cors(corsOptions), singinRouter);
 app.use('/api',cors(corsOptions), categoryRouter);
+app.use('/api',cors(corsOptions), bodyPartRouter);
+app.use('/api',cors(corsOptions), exerciseRouter);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

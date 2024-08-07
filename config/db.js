@@ -1,5 +1,3 @@
-import mysql from 'mysql2';
-import dotenv from 'dotenv';
 import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER, DIALECT } from './config.js';
 import { Sequelize } from 'sequelize';
 

@@ -13,7 +13,6 @@ const isAdmin = (req, res, next) => {
       req.user = decoded; // Añade la información del usuario decodificada a la solicitud
       
       //verifico si es admin
-      console.log(decoded);
       if (decoded.user.rolId !== 1) return res.status(403).send({message: "No tienes acceso"})
       
         next();

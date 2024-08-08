@@ -15,6 +15,7 @@ import { Rol, User, Category, BodyPart } from './models/index.js';
 import bodyPartRouter from './routes/bodyPartRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import isAuth from './middlewares/auth.js';
+import planRouter from './routes/planRoutes.js';
 
 
 dotenv.config();
@@ -154,6 +155,7 @@ app.use('/api',cors(corsOptions), singinRouter);
 app.use('/api',cors(corsOptions), categoryRouter);
 app.use('/api',cors(corsOptions), bodyPartRouter);
 app.use('/api',cors(corsOptions), exerciseRouter);
+app.use('/api', cors(corsOptions), planRouter);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

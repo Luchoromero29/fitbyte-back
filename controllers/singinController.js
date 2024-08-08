@@ -24,9 +24,6 @@ export const login = async (req, res) => {
       expiresIn: '1h',
     });
 
-    console.log(token);
-    
-
     res
       .cookie('access_token', token, {
         httpOnly: true,

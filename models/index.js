@@ -9,6 +9,7 @@ import Category from "./categoryModel.js";
 import Routine from "./routineModel.js";
 import Serie from "./serieModel.js";
 import Rol from "./rolModel.js";
+import PreferenceUser from "./preferenceUser.js";
 
 // RELACIÓN USUARIO-PLAN -- ONE TO MANY 
 User.hasMany(Plan, { foreignKey: 'userId' });
@@ -30,9 +31,9 @@ Activity.belongsTo(Routine, { foreignKey: 'routineId' });
 Activity.hasMany(Serie, { foreignKey: 'activityId' });
 Serie.belongsTo(Activity, { foreignKey: 'activityId' });
 
-// RELACIÓN ACTIVIDAD-EJERCICIO -- MANY TO MANY
-Activity.belongsToMany(Exercise, { through: "ActivityExercise" });
-Exercise.belongsToMany(Activity, { through: 'ActivityExercise' });
+// RELACIÓN ACTIVIDAD-EJERCICIO -- ONE TO MANY
+Exercise.hasMany(Activity, {foreignKey: 'exerciseId'});
+Activity.belongsTo(Exercise, {foreignKey: 'exerciseId'});
 
 // RELACIÓN EJERCICIO-GRUPO MUSCULAR -- MANY TO MANY
 BodyPart.belongsToMany(Exercise, { through: "ExerciseBodyPart" });
@@ -42,4 +43,8 @@ Exercise.belongsToMany(BodyPart, { through: 'ExerciseBodyPart' });
 Category.hasMany(Exercise, { foreignKey: 'categoryId' });
 Exercise.belongsTo(Category, { foreignKey: 'categoryId' });
 
-export { Exercise, User, Plan, Routine, Activity, BodyPart, Category, Serie, Rol };
+//RELACION PREFERENCIAS-USUARIO -- ONE TO ONE
+User.hasOne(PreferenceUser, { foreignKey: 'userId' });
+PreferenceUser.belongsTo(User, { foreignKey: 'userId' });
+
+export { Exercise, User, Plan, Routine, Activity, BodyPart, Category, Serie, Rol, PreferenceUser };

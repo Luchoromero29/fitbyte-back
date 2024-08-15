@@ -1,24 +1,30 @@
+
+
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 
-const Routine = db.define('Routine', {
+const PreferenceUser = db.define('PreferenceUser', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
-    name: {
+    unitWeight: {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    day: {
+    theme: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
-    planId: {
+    language: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-    },
+        allowNull: false
+    }
 });
 
-export default Routine;
+export default PreferenceUser;

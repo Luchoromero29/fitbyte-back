@@ -5,9 +5,8 @@ import { SALT_ROUNDS } from '../config/config.js';
 // Crear un nuevo usuario
 export const createUser = async (req, res) => {
   try {
-    const { name, lastname, email, password, weight, height, unit, birthdate } = req.body;
+    const { name, lastname, email, password, weight, height, birthdate } = req.body;
     const rolId = 2;
-    const BMI = calcBMI(weight, height);
     const active = true;
 
     await validationPassword(password);
@@ -24,9 +23,7 @@ export const createUser = async (req, res) => {
       password: hashedPassword,
       weight,
       height,
-      unit,
       birthdate,
-      BMI,
       active
     });
 

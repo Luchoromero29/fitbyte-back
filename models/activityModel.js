@@ -15,11 +15,11 @@ const Activity = db.define('Activity', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    break: {
+    rest: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    postBreak: {
+    postRest: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
@@ -31,6 +31,10 @@ const Activity = db.define('Activity', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    exerciseId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
     
 });
 

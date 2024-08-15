@@ -44,6 +44,23 @@ export const getPlanById = async (req, res) => {
   }
 };
 
+export const getPlanByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const plans = await Plan.findAll({ where: { userId } });
+    if (plans.length === 0) {
+      return res.status(404).json({ message: 'Planes no encontrados' });
+    }
+    
+    res.status(200).json(plans);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los planes', error: error.message });
+  }
+};
+
+
+
 
 
 export const updatePlan = async (req, res) => {

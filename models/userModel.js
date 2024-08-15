@@ -40,14 +40,6 @@ const User = db.define('User', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
-    BMI: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-    },
-    unit: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
     active: {
         type: DataTypes.BOOLEAN,
         allowNull: false

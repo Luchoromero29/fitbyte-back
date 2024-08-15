@@ -16,6 +16,8 @@ import bodyPartRouter from './routes/bodyPartRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import isAuth from './middlewares/auth.js';
 import planRouter from './routes/planRoutes.js';
+import routineRouter from './routes/routineRoutes.js';
+import activityRouter from './routes/activityRoutes.js';
 
 
 dotenv.config();
@@ -68,12 +70,13 @@ app.use(cors(corsOptions));
 //app.use(cors(corsOptions));
 
 // Inicializar roles y usuario
+
 const initializeRoles = async () => {
   await Rol.findOrCreate({ where: { name: 'ADMIN' } });
   await Rol.findOrCreate({ where: { name: 'USER' } });
 
-  const categories = ["Mancuernas", "Barra", "Ketbel", "Maquina", "Peso corporal", "Cardio"]
-  const bodyparts = ["Biceps", "Triceps", "Pectoral", "Espalda", "Cuadriceps", "Piernas", "Isquiotibiales", "Gemelos", "Antebrazos", "Hombros", "Gluteos", "Abdominales", "Trapecio"]
+  const categories = ["Mancuernas", "Barra", "Ketbel", "Maquina", "Peso corporal", "Cardio"];
+  const bodyparts = ["Biceps", "Triceps", "Pectoral", "Espalda", "Cuadriceps", "Piernas", "Isquiotibiales", "Gemelos", "Antebrazos", "Hombros", "Gluteos", "Abdominales", "Trapecio"];
   const hashedPassword = await bcrypt.hash('root', SALT_ROUNDS);
 
   await User.findOrCreate({
@@ -88,28 +91,24 @@ const initializeRoles = async () => {
       height: 1.78,
       BMI: 23.98,
       unit: 'KG',
-      active: true
+      active: true,
     },
   });
 
-  for(let i = 0 ; i < categories.length ; i++){
-    cargarCategorias(categories[i])
+  for (let i = 0; i < categories.length; i++) {
+    await cargarCategorias(categories[i]);
   }
 
   async function cargarCategorias(name) {
-    await Category.create({
-      name: name
-    })
+    await Category.findOrCreate({ where: { name: name } });
   }
 
-  for(let i = 0 ; i < bodyparts.length ; i++){
-    cargarBodyPart(bodyparts[i])
+  for (let i = 0; i < bodyparts.length; i++) {
+    await cargarBodyPart(bodyparts[i]);
   }
 
   async function cargarBodyPart(name) {
-    await BodyPart.create({
-      name: name
-    })
+    await BodyPart.findOrCreate({ where: { name: name } });
   }
 };
 
@@ -117,33 +116,21 @@ const initializeRoles = async () => {
 db.authenticate()
   .then(() => {
     console.log('Conectado a la base de datos');
-    // Si necesitas reiniciar la base de datos, descomenta la siguiente línea
-    // return db.sync({ force: true });
+    // Si necesitas forzar la sincronización con eliminación, usa { force: true }, pero esto eliminará datos
+    //return db.sync({ force: true });
   })
   .then(() => {
-    //initializeRoles();
+    //return db.sync({ alter: true }); // Esta opción mantendrá los datos existentes
+  })
+  .then(() => {
+    console.log('Database synchronized!');
+    //return initializeRoles(); // Asegúrate de que se ejecuta después de la sincronización
   })
   .catch((error) => {
     console.error('Error al conectar a la base de datos:', error);
   });
 
-// db.sync()  // 'force: true' elimina y recrea las tablas en cada inicio
-//     .then(() => {
-//         console.log('Database & tables created!');
-//         initializeRoles();
-//     })
-//     .catch(err => {
-//         console.error('Unable to create database & tables:', err);
-//     });
 
-// db.sync({force: 'true'})  // 'force: true' elimina y recrea las tablas en cada inicio
-//     .then(() => {
-//         console.log('Database & tables created!');
-//          initializeRoles();
-//     })
-//     .catch(err => {
-//         console.error('Unable to create database & tables:', err);
-//     });
 
 // Rutas
 app.get('/api/verify-auth', isAuth, (req, res) => {
@@ -156,6 +143,8 @@ app.use('/api',cors(corsOptions), categoryRouter);
 app.use('/api',cors(corsOptions), bodyPartRouter);
 app.use('/api',cors(corsOptions), exerciseRouter);
 app.use('/api', cors(corsOptions), planRouter);
+app.use('/api', cors(corsOptions), routineRouter);
+app.use('/api', cors(corsOptions), activityRouter);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

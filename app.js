@@ -18,6 +18,7 @@ import isAuth from './middlewares/auth.js';
 import planRouter from './routes/planRoutes.js';
 import routineRouter from './routes/routineRoutes.js';
 import activityRouter from './routes/activityRoutes.js';
+import serieRouter from './routes/serieRoutes.js';
 
 
 dotenv.config();
@@ -145,6 +146,7 @@ app.use('/api',cors(corsOptions), exerciseRouter);
 app.use('/api', cors(corsOptions), planRouter);
 app.use('/api', cors(corsOptions), routineRouter);
 app.use('/api', cors(corsOptions), activityRouter);
+app.use('/api', cors(corsOptions), serieRouter);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

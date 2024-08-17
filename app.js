@@ -117,14 +117,14 @@ db.authenticate()
     console.log('Conectado a la base de datos');
     // Si necesitas forzar la sincronización con eliminación, usa { force: true }, pero esto eliminará datos
     //initializeRoles()
-    return db.sync({ force: true });
+    //return db.sync({ force: true });
   })
   .then(() => {
     //return db.sync({ alter: true }); // Esta opción mantendrá los datos existentes
   })
   .then(() => {
     console.log('Database synchronized!');
-    return initializeRoles(); // Asegúrate de que se ejecuta después de la sincronización
+    //return initializeRoles(); // Asegúrate de que se ejecuta después de la sincronización
   })
   .catch((error) => {
     console.error('Error al conectar a la base de datos:', error);

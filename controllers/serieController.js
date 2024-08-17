@@ -23,8 +23,8 @@ export const createSerie = async (req, res) => {
 // Obtener todos los usuarios
 export const getSeries = async (req, res) => {
   try {
-    const Series = await Serie.findAll();
-    res.status(200).json(Series);
+    const series = await Serie.findAll();
+    res.status(200).json(series);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener las series', error });
   }
@@ -34,11 +34,11 @@ export const getSeries = async (req, res) => {
 export const getSerieById = async (req, res) => {
   try {
     const { id } = req.params;
-    const Serie = await Serie.findByPk(id);
-    if (!Serie) {
+    const serie = await Serie.findByPk(id);
+    if (!serie) {
       return res.status(404).json({ message: 'serie no encontrada' });
     }
-    res.status(200).json(Serie);
+    res.status(200).json(serie);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener la serie', error });
   }
@@ -48,12 +48,12 @@ export const getSerieByActivityId = async (req, res) => {
   try {
     const { activityId } = req.params;
     
-    const Series = await Serie.findAll({ where: { activityId } });
-    if (Series.length === 0) {
+    const series = await Serie.findAll({ where: { activityId } });
+    if (series.length === 0) {
       return res.status(404).json({ message: 'series no encontradas' });
     }
     
-    res.status(200).json(Series);
+    res.status(200).json(series);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener las series', error: error.message });
   }
@@ -68,16 +68,16 @@ export const updateSerie = async (req, res) => {
     const { id } = req.params;
     const { weight, repetition, unit} = req.body;
     
-    const Serie = await Serie.findByPk(id);
-    if (!Serie) {
+    const serie = await Serie.findByPk(id);
+    if (!serie) {
       return res.status(404).json({ message: 'serie no encontrada' });
     }
 
-    Serie.weight = weight !== undefined ? weight : Serie.weight;
-    Serie.repetition = repetition !== undefined ? repetition : Serie.repetition;
-    Serie.unit = unit !== undefined ? unit : Serie.unit;
+    serie.weight = weight !== undefined ? weight : Serie.weight;
+    serie.repetition = repetition !== undefined ? repetition : Serie.repetition;
+    serie.unit = unit !== undefined ? unit : Serie.unit;
     
-    await Serie.save();
+    await serie.save();
     res.status(200).json(Serie);
   } catch (error) {
     res.status(500).json({ message: error.message || 'Error al actualizar la serie' });

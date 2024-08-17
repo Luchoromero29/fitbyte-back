@@ -5,7 +5,7 @@ import { Activity } from '../models/index.js';
 
 export const createActivity = async (req, res) => {
     try {
-        const { name, focus, note, routineId, rest, postRest } = req.body;
+        const { name, focus, note, routineId, rest, postRest, exerciseId } = req.body;
 
 
 
@@ -15,7 +15,8 @@ export const createActivity = async (req, res) => {
             note,
             routineId,
             rest,
-            postRest
+            postRest,
+            exerciseId
         });
 
         res.status(201).json(newActivity);
@@ -76,6 +77,7 @@ export const updateActivity = async (req, res) => {
         activity.rest = rest !== undefined ? rest : activity.rest;
         activity.postRest = postRest !== undefined ? postRest : activity.postRest;
         activity.focus = focus !== undefined ? focus : activity.focus;
+        activity.exerciseId = exerciseId !== undefined ? exerciseId : activity.exerciseId;
 
         await activity.save();
         res.status(200).json(activity);

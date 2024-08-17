@@ -1,23 +1,23 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
 
-const Serie = db.define('Serie', {
+const Serie = db.define('Series', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
-    weigth: {
+    weight: {
         type: DataTypes.FLOAT,
-        allowNull: false,
+        allowNull: true,
     },
     repetition: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     unit: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     activityId: {
         type: DataTypes.INTEGER,

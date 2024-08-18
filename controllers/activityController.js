@@ -27,8 +27,8 @@ export const createActivity = async (req, res) => {
 
 export const getActivitys = async (req, res) => {
     try {
-        const Activities = await Activity.findAll();
-        res.status(200).json(Activities);
+        const activities = await Activity.findAll();
+        res.status(200).json(activities);
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener las actividades', error });
     }
@@ -51,12 +51,12 @@ export const getActivityByRoutineId = async (req, res) => {
     try {
         const { routineId } = req.params;
 
-        const Activities = await Activity.findAll({ where: { routineId } });
-        if (Activities.length === 0) {
+        const activities = await Activity.findAll({ where: { routineId } });
+        if (activities.length === 0) {
             return res.status(404).json({ message: 'actividades no encontradas' });
         }
 
-        res.status(200).json(Activities);
+        res.status(200).json(activities);
     } catch (error) {
         res.status(500).json({ message: 'Error al obtener las actividades', error: error.message });
     }
@@ -65,7 +65,7 @@ export const getActivityByRoutineId = async (req, res) => {
 export const updateActivity = async (req, res) => {
     try {
         const { id } = req.params;
-        const { note, rest, focus, postRest, name } = req.body;
+        const { note, rest, focus, postRest, name, exerciseId } = req.body;
 
         const activity = await Activity.findByPk(id);
         if (!activity) {

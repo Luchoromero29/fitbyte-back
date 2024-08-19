@@ -53,7 +53,7 @@ export const getActivityByRoutineId = async (req, res) => {
 
         const activities = await Activity.findAll({ where: { routineId } });
         if (activities.length === 0) {
-            return res.status(404).json({ message: 'actividades no encontradas' });
+            return res.status(200).json({ message: 'actividades no encontradas' });
         }
 
         res.status(200).json(activities);

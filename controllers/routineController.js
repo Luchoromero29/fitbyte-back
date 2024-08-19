@@ -52,7 +52,7 @@ export const getRoutineByPlanId = async (req, res) => {
     
     const routines = await Routine.findAll({ where: { planId } });
     if (routines.length === 0) {
-      return res.status(404).json({ message: 'rutinas no encontradas' });
+      return res.status(200).json({ message: 'rutinas no encontradas' });
     }
     
     res.status(200).json(routines);

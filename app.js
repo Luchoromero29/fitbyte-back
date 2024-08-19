@@ -19,6 +19,7 @@ import planRouter from './routes/planRoutes.js';
 import routineRouter from './routes/routineRoutes.js';
 import activityRouter from './routes/activityRoutes.js';
 import serieRouter from './routes/serieRoutes.js';
+import preferenceUserRouter from './routes/preferenceUserRoutes.js';
 
 
 dotenv.config();
@@ -116,7 +117,6 @@ db.authenticate()
   .then(() => {
     console.log('Conectado a la base de datos');
     // Si necesitas forzar la sincronización con eliminación, usa { force: true }, pero esto eliminará datos
-    //initializeRoles()
     //return db.sync({ force: true });
   })
   .then(() => {
@@ -146,6 +146,7 @@ app.use('/api', cors(corsOptions), planRouter);
 app.use('/api', cors(corsOptions), routineRouter);
 app.use('/api', cors(corsOptions), activityRouter);
 app.use('/api', cors(corsOptions), serieRouter);
+app.use('/api', cors(corsOptions), preferenceUserRouter);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

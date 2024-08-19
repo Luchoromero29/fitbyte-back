@@ -23,7 +23,8 @@ const PreferenceUser = db.define('PreferenceUser', {
     },
     userId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        unique: true
     }
 });
 

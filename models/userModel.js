@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import db from '../config/db.js';
+import PreferenceUser from './preferenceUser.js';
 
 const User = db.define('User', {
     id: {
@@ -39,6 +40,10 @@ const User = db.define('User', {
     height: {
         type: DataTypes.FLOAT,
         allowNull: false,
+    },
+    preferenceId:{
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
     active: {
         type: DataTypes.BOOLEAN,

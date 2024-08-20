@@ -67,7 +67,6 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 };
-app.use(cors(corsOptions));
 
 //app.use(cors(corsOptions));
 
@@ -76,11 +75,11 @@ app.use(cors(corsOptions));
 const initializeRoles = async () => {
   await Rol.findOrCreate({ where: { name: 'ADMIN' } });
   await Rol.findOrCreate({ where: { name: 'USER' } });
-
+  
   const categories = ["Mancuernas", "Barra", "Ketbel", "Maquina", "Peso corporal", "Cardio"];
   const bodyparts = ["Biceps", "Triceps", "Pectoral", "Espalda", "Cuadriceps", "Piernas", "Isquiotibiales", "Gemelos", "Antebrazos", "Hombros", "Gluteos", "Abdominales", "Trapecio"];
   const hashedPassword = await bcrypt.hash('root', SALT_ROUNDS);
-
+  
   await User.findOrCreate({
     where: {
       rolId: 1,
@@ -89,20 +88,18 @@ const initializeRoles = async () => {
       birthdate: new Date('2002-08-29').toISOString(),
       email: 'luchonromero@gmail.com',
       password: hashedPassword,
-      weight: 76,
-      height: 1.78,
       active: true,
     },
   });
-
+  
   for (let i = 0; i < categories.length; i++) {
     await cargarCategorias(categories[i]);
   }
-
+  
   async function cargarCategorias(name) {
     await Category.findOrCreate({ where: { name: name } });
   }
-
+  
   for (let i = 0; i < bodyparts.length; i++) {
     await cargarBodyPart(bodyparts[i]);
   }
@@ -114,25 +111,26 @@ const initializeRoles = async () => {
 
 // Sincronizar base de datos
 db.authenticate()
-  .then(() => {
-    console.log('Conectado a la base de datos');
-    // Si necesitas forzar la sincronización con eliminación, usa { force: true }, pero esto eliminará datos
-    //return db.sync({ force: true });
-  })
-  .then(() => {
-    //return db.sync({ alter: true }); // Esta opción mantendrá los datos existentes
-  })
-  .then(() => {
-    console.log('Database synchronized!');
-    //return initializeRoles(); // Asegúrate de que se ejecuta después de la sincronización
-  })
-  .catch((error) => {
-    console.error('Error al conectar a la base de datos:', error);
-  });
+.then(() => {
+  console.log('Conectado a la base de datos');
+  // Si necesitas forzar la sincronización con eliminación, usa { force: true }, pero esto eliminará datos
+  //return db.sync({ force: true });
+})
+.then(() => {
+  //return db.sync({ alter: true }); // Esta opción mantendrá los datos existentes
+})
+.then(() => {
+  console.log('Database synchronized!');
+  //return initializeRoles(); // Asegúrate de que se ejecuta después de la sincronización
+})
+.catch((error) => {
+  console.error('Error al conectar a la base de datos:', error);
+});
 
 
 
 // Rutas
+app.use(cors(corsOptions));
 app.get('/api/verify-auth', isAuth, (req, res) => {
   res.status(200).json({ user: req.user, token: req.token });
 });
@@ -142,11 +140,11 @@ app.use('/api',cors(corsOptions), singinRouter);
 app.use('/api',cors(corsOptions), categoryRouter);
 app.use('/api',cors(corsOptions), bodyPartRouter);
 app.use('/api',cors(corsOptions), exerciseRouter);
-app.use('/api', cors(corsOptions), planRouter);
-app.use('/api', cors(corsOptions), routineRouter);
-app.use('/api', cors(corsOptions), activityRouter);
-app.use('/api', cors(corsOptions), serieRouter);
-app.use('/api', cors(corsOptions), preferenceUserRouter);
+app.use('/api',cors(corsOptions), planRouter);
+app.use('/api',cors(corsOptions), routineRouter);
+app.use('/api',cors(corsOptions), activityRouter);
+app.use('/api',cors(corsOptions), serieRouter);
+app.use('/api',cors(corsOptions), preferenceUserRouter);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

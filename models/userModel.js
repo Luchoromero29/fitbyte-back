@@ -33,14 +33,6 @@ const User = db.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    weight: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-    },
-    height: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-    },
     preferenceId:{
         type: DataTypes.INTEGER,
         allowNull: true

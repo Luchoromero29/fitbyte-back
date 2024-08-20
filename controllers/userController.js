@@ -5,11 +5,11 @@ import { SALT_ROUNDS } from '../config/config.js';
 // Crear un nuevo usuario
 export const createUser = async (req, res) => {
   try {
-    const { name, lastname, email, password, weight, height, birthdate } = req.body;
+    const { name, lastname, email, password, birthdate } = req.body;
     const rolId = 2;
     const active = true;
 
-    await validationPassword(password);
+    validationPassword(password);
     await existEmail(email);
 
     // Hash de password
@@ -21,8 +21,6 @@ export const createUser = async (req, res) => {
       lastname,
       email,
       password: hashedPassword,
-      weight,
-      height,
       birthdate,
       active
     });
@@ -73,23 +71,20 @@ export const getUserByEmail = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, lastname, email, password, weight, height, unit, birthdate } = req.body;
-    await validationPassword(password);
+    const { name, lastname, email, password, birthdate, preferenceId } = req.body;
+    validationPassword(password);
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
-
+    console.log(preferenceId);
+    
     user.name = name !== undefined ? name : user.name;
     user.lastname = lastname !== undefined ? lastname : user.lastname;
     user.email = email !== undefined ? email : user.email;
     user.password = password !== undefined ? password : user.password;
-    user.weight = weight !== undefined ? weight : user.weight;
-    user.height = height !== undefined ? height : user.height;
-    user.unit = unit !== undefined ? unit : user.unit;
     user.birthdate = birthdate !== undefined ? birthdate : user.birthdate;
-
-    user.BMI = calcBMI(user.weight, user.height);
+    user.preferenceId = preferenceId !== undefined ? preferenceId : user.preferenceId;
 
     await user.save();
     res.status(200).json(user);
@@ -97,6 +92,22 @@ export const updateUser = async (req, res) => {
     res.status(500).json({ message: error.message || 'Error al actualizar el usuario' });
   }
 };
+
+export const setPreferenceId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { preferenceId } = req.body;
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    user.preferenceId = preferenceId;
+    await user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message || 'Error al actualizar el usuario' });
+  }
+}
 
 // Eliminar un usuario
 export const deleteUser = async (req, res) => {

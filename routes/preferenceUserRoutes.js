@@ -6,7 +6,7 @@ import isAdmin from '../middlewares/admin.js';
 
 const preferenceUserRouter = express.Router();
 
-preferenceUserRouter.post('/preference',isAuth, createPreferenceUser);
+preferenceUserRouter.post('/preference', createPreferenceUser);
 preferenceUserRouter.get('/preference', isAdmin, getPreferencesUsers);
 preferenceUserRouter.get('/preference/:id', isAuth, getPreferenceUserById);
 preferenceUserRouter.get('/preference/user/:userId', isAuth, getPreferenceUserByUserId);

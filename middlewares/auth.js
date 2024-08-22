@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
 import { JWT_SECRET_KEY } from '../config/config.js'
+import User from '../models/userModel.js';
 
-const isAuth = (req, res, next) => {
+const isAuth = async (req, res, next) => {
 
     const token = req.cookies.access_token;
 
@@ -11,7 +12,7 @@ const isAuth = (req, res, next) => {
   
     try {
       const decoded = jwt.verify(token, JWT_SECRET_KEY);
-      req.user = decoded;
+      req.user = decoded
       req.token = token // Añade la información del usuario decodificada a la solicitud
       next();
     } catch (err) {

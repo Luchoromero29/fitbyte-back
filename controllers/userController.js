@@ -72,17 +72,21 @@ export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, lastname, email, password, birthdate, preferenceId } = req.body;
-    validationPassword(password);
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
+    console.log(name, lastname, email, password, birthdate, preferenceId);  
+    
     console.log(preferenceId);
     
     user.name = name !== undefined ? name : user.name;
     user.lastname = lastname !== undefined ? lastname : user.lastname;
     user.email = email !== undefined ? email : user.email;
     user.password = password !== undefined ? password : user.password;
+    validationPassword(user.password);
+    console.log("valido");
+    
     user.birthdate = birthdate !== undefined ? birthdate : user.birthdate;
     user.preferenceId = preferenceId !== undefined ? preferenceId : user.preferenceId;
 

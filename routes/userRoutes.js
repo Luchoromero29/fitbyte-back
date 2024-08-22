@@ -8,10 +8,10 @@ const userRouter = express.Router();
 
 userRouter.post('/users', createUser);
 userRouter.get('/users', isAdmin, getUsers);
-userRouter.get('/users/:id', getUserById);
+userRouter.get('/users/:id', isAuth,  getUserById);
 userRouter.put('/users/:id',isAuth, updateUser);
-userRouter.put('/users/preference/:id', setPreferenceId);
+userRouter.put('/users/preference/:id', isAuth, setPreferenceId);
 userRouter.delete('/users/:id',isAuth, deleteUser);
-userRouter.get('/users/email/:email', getUserByEmail);
+userRouter.get('/users/email/:email',   isAuth , getUserByEmail);
 
 export default userRouter;

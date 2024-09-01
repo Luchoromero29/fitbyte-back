@@ -10,6 +10,7 @@ import Routine from "./routineModel.js";
 import Serie from "./serieModel.js";
 import Rol from "./rolModel.js";
 import PreferenceUser from "./preferenceUser.js";
+import ActivePlan from "./activePlan.js";
 
 // RELACIÓN USUARIO-PLAN -- ONE TO MANY 
 User.hasMany(Plan, { foreignKey: 'userId' });
@@ -47,4 +48,7 @@ Exercise.belongsTo(Category, { foreignKey: 'categoryId' });
 User.hasOne(PreferenceUser, { foreignKey: 'userId' });
 PreferenceUser.belongsTo(User, { foreignKey: 'userId' });
 
-export { Exercise, User, Plan, Routine, Activity, BodyPart, Category, Serie, Rol, PreferenceUser };
+User.hasOne(ActivePlan, { foreignKey: 'userId' });
+ActivePlan.belongsTo(User, { foreignKey: 'userId' });
+
+export { Exercise, User, Plan, Routine, Activity, BodyPart, Category, Serie, Rol, PreferenceUser, ActivePlan };

@@ -83,23 +83,24 @@ export const updateExercise = async (req, res) => {
     const { id } = req.params;
     const { name, description, categoryId } = req.body;
     const image = req.file
+    console.log(name, description, categoryId);
     
     const exercise = await Exercise.findByPk(id);
     if (!exercise) {
       return res.status(404).json({ message: 'Ejercicio no encontrado' });
     }
 
-    let urlImage = null;
+    let urlImage = undefined;
 
     if(image) {
       const result = await cloudinary.uploader.upload(image.path);
       urlImage = result.secure_url; 
     }
 
-    exercise.name = name !== "" ? name : exercise.name;
-    exercise.description = description !== "" ? description : exercise.description;
-    exercise.categoryId = categoryId !== "" ? categoryId : exercise.categoryId;
-    exercise.urlImage = urlImage !== "" ? urlImage : exercise.urlImage;
+    exercise.name = name !== undefined ? name : exercise.name;
+    exercise.description = description !== undefined ? description : exercise.description;
+    exercise.categoryId = categoryId !== undefined ? categoryId : exercise.categoryId;
+    exercise.urlImage = urlImage !== undefined ? urlImage : exercise.urlImage;
 
     await exercise.save();
     res.status(200).json(exercise);

@@ -20,6 +20,7 @@ import routineRouter from './routes/routineRoutes.js';
 import activityRouter from './routes/activityRoutes.js';
 import serieRouter from './routes/serieRoutes.js';
 import preferenceUserRouter from './routes/preferenceUserRoutes.js';
+import activePlanRouter from './routes/activePlanRoute.js';
 
 
 dotenv.config();
@@ -145,6 +146,7 @@ app.use('/api',cors(corsOptions), routineRouter);
 app.use('/api',cors(corsOptions), activityRouter);
 app.use('/api',cors(corsOptions), serieRouter);
 app.use('/api',cors(corsOptions), preferenceUserRouter);
+app.use('/api',cors(corsOptions), activePlanRouter);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

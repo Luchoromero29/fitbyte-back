@@ -6,7 +6,7 @@ import { SALT_ROUNDS } from '../config/config.js';
 export const createSerie = async (req, res) => {
   try {
     const { weight, repetition, unit, activityId } = req.body;
-
+    
     const newSerie = await Serie.create({
       weight,
       repetition,

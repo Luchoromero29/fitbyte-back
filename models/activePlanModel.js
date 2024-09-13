@@ -9,7 +9,7 @@ const ActivePlan = db.define('ActivePlan', {
     },
     planId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     userId: {
         type: DataTypes.INTEGER,

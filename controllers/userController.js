@@ -8,7 +8,8 @@ export const createUser = async (req, res) => {
     const { name, lastname, email, password, birthdate } = req.body;
     const rolId = 2;
     const active = true;
-
+    console.log(name, lastname, email, password, birthdate);
+    
     validationPassword(password);
     await existEmail(email);
 
@@ -24,10 +25,18 @@ export const createUser = async (req, res) => {
       birthdate,
       active
     });
-
-    res.status(201).json(newUser);
+    console.log(newUser);
+    res.status(201).json({
+      ok: true,
+      status: 201,
+      body: newUser
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message || 'Error al crear el usuario' });
+    res.status(400).json({
+      ok: false,
+      status: 400,
+      body: { message: error.message || 'Error al crear el usuario' }
+    });
   }
 };
 
@@ -35,9 +44,17 @@ export const createUser = async (req, res) => {
 export const getUsers = async (req, res) => {
   try {
     const users = await User.findAll();
-    res.status(200).json(users);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: users
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener los usuarios', error });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: 'Error al obtener los usuarios', error }
+    });
   }
 };
 
@@ -47,11 +64,23 @@ export const getUserById = async (req, res) => {
     const { id } = req.params;
     const user = await User.findByPk(id);
     if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Usuario no encontrado' }
+      });
     }
-    res.status(200).json(user);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: user
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener el usuario', error });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: 'Error al obtener el usuario', error }
+    });
   }
 };
 
@@ -60,11 +89,23 @@ export const getUserByEmail = async (req, res) => {
     const { email } = req.params;
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Usuario no encontrado' }
+      });
     }
-    res.status(200).json(user);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: user
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener el usuario', error });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: 'Error al obtener el usuario', error }
+    });
   }
 };
 
@@ -74,26 +115,37 @@ export const updateUser = async (req, res) => {
     const { name, lastname, email, password, birthdate, preferenceId } = req.body;
     const user = await User.findByPk(id);
     if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Usuario no encontrado' }
+      });
     }
-    console.log(name, lastname, email, password, birthdate, preferenceId);  
-    
-    console.log(preferenceId);
-    
+
     user.name = name !== undefined ? name : user.name;
     user.lastname = lastname !== undefined ? lastname : user.lastname;
     user.email = email !== undefined ? email : user.email;
-    user.password = password !== undefined ? password : user.password;
-    validationPassword(user.password);
-    console.log("valido");
-    
+
+    if (password !== undefined) {
+      validationPassword(password);
+      user.password = await bcrypt.hash(password, SALT_ROUNDS);
+    }
+
     user.birthdate = birthdate !== undefined ? birthdate : user.birthdate;
     user.preferenceId = preferenceId !== undefined ? preferenceId : user.preferenceId;
 
     await user.save();
-    res.status(200).json(user);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: user
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Error al actualizar el usuario' });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: error.message || 'Error al actualizar el usuario' }
+    });
   }
 };
 
@@ -103,15 +155,27 @@ export const setPreferenceId = async (req, res) => {
     const { preferenceId } = req.body;
     const user = await User.findByPk(id);
     if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Usuario no encontrado' }
+      });
     }
     user.preferenceId = preferenceId;
     await user.save();
-    res.status(200).json(user);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: user
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Error al actualizar el usuario' });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: error.message || 'Error al actualizar el usuario' }
+    });
   }
-}
+};
 
 // Eliminar un usuario
 export const deleteUser = async (req, res) => {
@@ -119,19 +183,33 @@ export const deleteUser = async (req, res) => {
     const { id } = req.params;
     const user = await User.findByPk(id);
     if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Usuario no encontrado' }
+      });
     }
     await user.destroy();
-    res.status(200).json({ message: 'Usuario eliminado' });
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: { message: 'Usuario eliminado' }
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar el usuario', error });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: 'Error al eliminar el usuario', error }
+    });
   }
 };
 
+// Función para calcular el IMC
 const calcBMI = (weight, height) => {
   return weight / (height ** 2);
 };
 
+// Función para validar la contraseña
 const validationPassword = (password) => {
   if (typeof password !== "string") throw new Error('La contraseña debe ser una cadena de texto');
   if (password.length < 8) throw new Error('La contraseña debe tener al menos 8 caracteres de largo');
@@ -140,6 +218,7 @@ const validationPassword = (password) => {
   return true;
 };
 
+// Función para verificar si el email ya existe
 const existEmail = async (email) => {
   const exist = await User.findOne({ where: { email } });
   if (exist) throw new Error('Email ya registrado');

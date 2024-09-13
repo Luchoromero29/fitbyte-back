@@ -1,6 +1,4 @@
-
-import { PreferenceUser } from '../models/index.js';
-import { SALT_ROUNDS } from '../config/config.js';
+import { PreferenceUser, User } from '../models/index.js';
 
 // Crear un nuevo usuario
 export const createPreferenceUser = async (req, res) => {
@@ -14,9 +12,23 @@ export const createPreferenceUser = async (req, res) => {
       theme
     });
 
-    res.status(201).json(newPreferenceUser);
+    const user =  await User.findByPk(userId);
+    if (user) {
+      user.preferenceId = newPreferenceUser.id;
+      await user.save();
+    }
+
+    res.status(201).json({
+      ok: true,
+      status: 201,
+      body: newPreferenceUser
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message || 'Error al crear las preferencias del usuario' });
+    res.status(400).json({
+      ok: false,
+      status: 400,
+      body: { message: error.message || 'Error al crear las preferencias del usuario' }
+    });
   }
 };
 
@@ -24,78 +36,129 @@ export const createPreferenceUser = async (req, res) => {
 export const getPreferencesUsers = async (req, res) => {
   try {
     const preferences = await PreferenceUser.findAll();
-    res.status(200).json(preferences);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: preferences
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las preferencias', error });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: 'Error al obtener las preferencias', error }
+    });
   }
 };
 
-// Obtener un usuario por ID
+// Obtener una preferencia por ID
 export const getPreferenceUserById = async (req, res) => {
   try {
     const { id } = req.params;
     const preference = await PreferenceUser.findByPk(id);
     if (!preference) {
-      return res.status(404).json({ message: 'preferencias no encontradas' });
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Preferencia no encontrada' }
+      });
     }
-    res.status(200).json(preference);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: preference
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las preferencias', error });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: 'Error al obtener las preferencias', error }
+    });
   }
 };
 
+// Obtener una preferencia por UserId
 export const getPreferenceUserByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
-    
     const preference = await PreferenceUser.findOne({ where: { userId } });
     if (!preference) {
-      return res.status(404).json({ message: 'preferencias no encontradas' });
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Preferencia no encontrada' }
+      });
     }
-    
-    res.status(200).json(preference);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: preference
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener las rutinas', error: error.message });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: 'Error al obtener las preferencias', error: error.message }
+    });
   }
 };
 
-
-
-
-
+// Actualizar preferencia de usuario
 export const updatePreferenceUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { unitWeight, language, theme} = req.body;
-    
+    const { unitWeight, language, theme } = req.body;
+
     const preference = await PreferenceUser.findByPk(id);
     if (!preference) {
-      return res.status(404).json({ message: 'preferencia no encontrada' });
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Preferencia no encontrada' }
+      });
     }
 
     preference.unitWeight = unitWeight !== undefined ? unitWeight : preference.unitWeight;
     preference.language = language !== undefined ? language : preference.language;
     preference.theme = theme !== undefined ? theme : preference.theme;
-    
+
     await preference.save();
-    res.status(200).json(preference);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: preference
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Error al actualizar las preferencias' });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: error.message || 'Error al actualizar las preferencias' }
+    });
   }
 };
 
-// Eliminar un usuario
+// Eliminar una preferencia
 export const deletePreferenceUser = async (req, res) => {
   try {
     const { id } = req.params;
     const preference = await PreferenceUser.findByPk(id);
     if (!preference) {
-      return res.status(404).json({ message: 'preferencias no encontradas' });
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Preferencia no encontrada' }
+      });
     }
     await preference.destroy();
-    res.status(200).json({ message: 'preferencia eliminada' });
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: { message: 'Preferencia eliminada' }
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar la preferencia', error });
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: 'Error al eliminar la preferencia', error }
+    });
   }
 };
-

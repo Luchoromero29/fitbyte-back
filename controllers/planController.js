@@ -1,5 +1,5 @@
 
-import { Plan } from '../models/index.js';
+import { Plan, ActivePlan } from '../models/index.js';
 import { SALT_ROUNDS } from '../config/config.js';
 
 // Crear un nuevo usuario
@@ -14,7 +14,11 @@ export const createPlan = async (req, res) => {
       userId
     });
 
-    res.status(201).json(newPlan);
+    res.status(201).json({
+      ok: true,
+      status: 201,
+      body: newPlan
+    });
   } catch (error) {
     res.status(400).json({ message: error.message || 'Error al crear el plan' });
   }
@@ -24,7 +28,11 @@ export const createPlan = async (req, res) => {
 export const getPlans = async (req, res) => {
   try {
     const plans = await Plan.findAll();
-    res.status(200).json(plans);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: plans
+    });
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener los planes', error });
   }
@@ -38,7 +46,11 @@ export const getPlanById = async (req, res) => {
     if (!plan) {
       return res.status(404).json({ message: 'Plan no encontrado' });
     }
-    res.status(200).json(plan);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: plan
+    });
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener el plan', error });
   }
@@ -47,13 +59,13 @@ export const getPlanById = async (req, res) => {
 export const getPlanByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
-    
     const plans = await Plan.findAll({ where: { userId } });
-    if (plans.length === 0) {
-      return res.status(404).json({ message: 'Planes no encontrados' });
-    }
     
-    res.status(200).json(plans);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: plans
+    }); // Retorna un array vacío si no hay planes, lo cual es válido.
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener los planes', error: error.message });
   }
@@ -77,24 +89,42 @@ export const updatePlan = async (req, res) => {
     plan.description = description !== undefined ? description : plan.description;
 
     await plan.save();
-    res.status(200).json(plan);
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: plan,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message || 'Error al actualizar el plan' });
   }
 };
 
-// Eliminar un usuario
+
+// Eliminar un plan por ID
 export const deletePlan = async (req, res) => {
   try {
     const { id } = req.params;
     const plan = await Plan.findByPk(id);
+    const activePlan = await ActivePlan.findOne({ where: { planId: id } });
+    
     if (!plan) {
       return res.status(404).json({ message: 'Plan no encontrado' });
     }
+
+    if (activePlan) {
+      activePlan.planId = null;
+      await activePlan.save();  
+    }
+
     await plan.destroy();
-    res.status(200).json({ message: 'Plan eliminado' });
+    res.status(200).json({ 
+      ok: true,
+      status: 200,
+      message: 'Plan eliminado correctamente' 
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar el plan', error });
+    res.status(500).json({ message: 'Error al eliminar el plan', error: error.message });
   }
 };
+
 

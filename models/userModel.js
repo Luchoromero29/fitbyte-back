@@ -40,6 +40,10 @@ const User = db.define('User', {
     active: {
         type: DataTypes.BOOLEAN,
         allowNull: false
+    },
+    activePlanId: {
+        type: DataTypes.INTEGER,
+        allowNull: true
     }
 
 });

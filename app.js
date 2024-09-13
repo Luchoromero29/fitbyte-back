@@ -54,7 +54,7 @@ app.use((req, res, next) => {
 //     credentials: true
 // }));
 
-const whiteList = ['http://localhost:5173', 'https://react-mysql-ten.vercel.app'];
+const whiteList = ['http://localhost:5173', 'https://react-mysql-ten.vercel.app', 'https://42cxgwtl-5173.brs.devtunnels.ms'];
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -133,7 +133,7 @@ db.authenticate()
 // Rutas
 app.use(cors(corsOptions));
 app.get('/api/verify-auth', isAuth, (req, res) => {
-  res.status(200).json({ user: req.user, token: req.token });
+  res.status(200).json({ data: req.data, token: req.token });
 });
 
 app.use('/api',cors(corsOptions), userRouter);

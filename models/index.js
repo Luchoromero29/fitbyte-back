@@ -10,7 +10,7 @@ import Routine from "./routineModel.js";
 import Serie from "./serieModel.js";
 import Rol from "./rolModel.js";
 import PreferenceUser from "./preferenceUser.js";
-import ActivePlan from "./activePlan.js";
+import ActivePlan from "./activePlanModel.js";
 
 // RELACIÓN USUARIO-PLAN -- ONE TO MANY 
 User.hasMany(Plan, { foreignKey: 'userId' });

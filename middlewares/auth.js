@@ -5,7 +5,8 @@ import User from '../models/userModel.js';
 const isAuth = async (req, res, next) => {
 
   const token = req.cookies.access_token;
-
+  console.log("Aca llegue rapido");
+  
   if (!token) {
     return res.status(401).json({ message: 'Acceso denegado. No token provided.' });
   }

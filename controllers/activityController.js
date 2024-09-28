@@ -1,4 +1,4 @@
-import { Activity } from '../models/index.js';
+import { Activity, Serie, PreferenceUser, Routine, Plan, User } from '../models/index.js';
 
 // Crear una nueva actividad
 export const createActivity = async (req, res) => {
@@ -14,6 +14,84 @@ export const createActivity = async (req, res) => {
       postRest,
       exerciseId
     });
+
+    const routine = await Routine.findByPk(routineId, {
+      include: {
+        model: Plan,
+        include: {
+          model: User,
+          include: PreferenceUser // Incluir preferencias del usuario
+        }
+      }
+    });
+
+    if (!routine) {
+      return res.status(404).json({ message: 'Routine not found' });
+    }
+
+    // Obtener las preferencias del usuario
+    const preference = routine.Plan.User.PreferenceUser;
+
+
+    switch (focus) {
+      case "Fuerza":
+        for (let i = 0; i < 5; i++) { // Generar 5 series
+          await Serie.create({
+            weight: 0, // Peso representativo
+            repetition: 6, // Repeticiones para fuerza
+            unit: "kg",
+            activityId: newActivity.id
+          });
+        }
+        break;
+    
+      case "Hipertrofia":
+        for (let i = 0; i < 4; i++) { // Generar 4 series
+          await Serie.create({
+            weight: 0, // Peso representativo
+            repetition: 8, // Repeticiones para hipertrofia
+            unit: "kg",
+            activityId: newActivity.id
+          });
+        }
+        break;
+    
+      case "Calentamiento":
+        for (let i = 0; i < 3; i++) { // Generar 3 series
+          await Serie.create({
+            weight: 0, // Peso ligero para calentamiento
+            repetition: 12, // Repeticiones para calentamiento
+            unit: "kg",
+            activityId: newActivity.id
+          });
+        }
+        break;
+    
+      case "Fallo":
+        for (let i = 0; i < 3; i++) { // Generar 3 series
+          await Serie.create({
+            weight: 0, // Peso representativo
+            repetition: 15, // Repeticiones para llegar al fallo
+            unit: "kg",
+            activityId: newActivity.id
+          });
+        }
+        break;
+    
+      case "Personalizado":
+        await Serie.create({
+          weight: 0, // Peso inicial
+          repetition: 0, // Repeticiones iniciales
+          unit: "kg",
+          activityId: newActivity.id
+        });
+        break;
+    
+      default:
+        console.log("Enfoque no reconocido");
+        break;
+    }
+    
 
     res.status(201).json({
       ok: true,

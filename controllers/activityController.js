@@ -35,7 +35,7 @@ export const createActivity = async (req, res) => {
 
     switch (focus) {
       case "Fuerza":
-        for (let i = 0; i < 5; i++) { // Generar 5 series
+        for (let i = 0; i < 4; i++) { // Generar 5 series
           await Serie.create({
             weight: 0, // Peso representativo
             repetition: 6, // Repeticiones para fuerza
@@ -49,7 +49,7 @@ export const createActivity = async (req, res) => {
         for (let i = 0; i < 4; i++) { // Generar 4 series
           await Serie.create({
             weight: 0, // Peso representativo
-            repetition: 8, // Repeticiones para hipertrofia
+            repetition: 10, // Repeticiones para hipertrofia
             unit: "kg",
             activityId: newActivity.id
           });

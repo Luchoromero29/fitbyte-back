@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { User } from '../models/index.js';
+import { User, PreferenceUser } from '../models/index.js';
 import { SALT_ROUNDS } from '../config/config.js';
 
 // Crear un nuevo usuario
@@ -25,7 +25,16 @@ export const createUser = async (req, res) => {
       birthdate,
       active
     });
-    console.log(newUser);
+
+    await PreferenceUser.create({
+      userId: newUser.id,
+      unitWeight: "KG",
+      language: "ES",
+      theme: "light",
+      customMode: false
+    });
+
+
     res.status(201).json({
       ok: true,
       status: 201,

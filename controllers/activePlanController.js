@@ -1,4 +1,4 @@
-import { ActivePlan } from '../models/index.js';
+import { ActivePlan, Plan, User } from '../models/index.js';
 import { SALT_ROUNDS } from '../config/config.js';
 
 // Crear un nuevo plan activo
@@ -75,14 +75,19 @@ export const getActivePlanByPlanId = async (req, res) => {
 export const getActivePlanByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
-    const activePlan = await ActivePlan.findOne({ where: { userId } });
-    if (!activePlan) {
+    const activePlan = await ActivePlan.findOne({ where: { userId }});
+
+    const plan = await Plan.findByPk(activePlan.planId);
+
+    
+
+    if (!plan) {
       return res.status(206).json({ message: 'Plan activo no encontrado' });
     }
     res.status(200).json({
       ok: true,
       status: 200,
-      body: activePlan
+      body: plan
     });
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener el Plan activo', error });
@@ -96,6 +101,29 @@ export const updateActivePlan = async (req, res) => {
     const { planId } = req.body;
     
     const activePlan = await ActivePlan.findByPk(id);
+    if (!activePlan) {
+      return res.status(404).json({ message: 'Plan activo no encontrado' });
+    }
+
+    activePlan.planId = planId !== undefined ?  planId : null;
+
+    await activePlan.save();
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: activePlan,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message || 'Error al actualizar el Plan activo' });
+  }
+};
+
+export const updateActivePlanByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { planId } = req.body;
+    
+    const activePlan = await ActivePlan.findOne({ where: { userId }});
     if (!activePlan) {
       return res.status(404).json({ message: 'Plan activo no encontrado' });
     }

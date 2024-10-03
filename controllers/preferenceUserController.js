@@ -3,13 +3,14 @@ import { PreferenceUser, User } from '../models/index.js';
 // Crear un nuevo usuario
 export const createPreferenceUser = async (req, res) => {
   try {
-    const { userId, unitWeight, language, theme } = req.body;
+    const { userId } = req.body;
 
     const newPreferenceUser = await PreferenceUser.create({
       userId,
-      unitWeight,
-      language,
-      theme
+      unitWeight: "KG",
+      language: "ES",
+      theme: "light",
+      customMode: false
     });
 
     const user =  await User.findByPk(userId);
@@ -106,7 +107,7 @@ export const getPreferenceUserByUserId = async (req, res) => {
 export const updatePreferenceUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { unitWeight, language, theme } = req.body;
+    const { unitWeight, language, theme, customMode } = req.body;
 
     const preference = await PreferenceUser.findByPk(id);
     if (!preference) {
@@ -120,6 +121,7 @@ export const updatePreferenceUser = async (req, res) => {
     preference.unitWeight = unitWeight !== undefined ? unitWeight : preference.unitWeight;
     preference.language = language !== undefined ? language : preference.language;
     preference.theme = theme !== undefined ? theme : preference.theme;
+    preference.customMode = customMode !== undefined ? customMode : preference.customMode;
 
     await preference.save();
     res.status(200).json({

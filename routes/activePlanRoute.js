@@ -1,5 +1,5 @@
 import express from 'express';
-import { createActivePlan, getActivePlanById, getActivePlanByUserId, getActivePlanByPlanId, getActivePlans, updateActivePlan, deleteActivePlan } from '../controllers/activePlanController.js';
+import { createActivePlan, getActivePlanById, getActivePlanByUserId, getActivePlanByPlanId, getActivePlans, updateActivePlan, deleteActivePlan, updateActivePlanByUserId } from '../controllers/activePlanController.js';
 import isAuth from '../middlewares/auth.js';
 
 
@@ -12,6 +12,7 @@ activePlanRouter.get('/activePlan/:id', isAuth, getActivePlanById);
 activePlanRouter.get('/activePlan/plan/:planId', isAuth, getActivePlanByPlanId );
 activePlanRouter.get('/activePlan/user/:userId', isAuth, getActivePlanByUserId);
 activePlanRouter.put('/activePlan/:id',isAuth, updateActivePlan);
+activePlanRouter.put('/activePlan/user/:userId',isAuth, updateActivePlanByUserId);
 activePlanRouter.delete('/activePlan/:id',isAuth, deleteActivePlan);
 
 export default activePlanRouter;

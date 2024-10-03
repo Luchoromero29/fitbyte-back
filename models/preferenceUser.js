@@ -21,6 +21,10 @@ const PreferenceUser = db.define('PreferenceUser', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    customMode: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+    },
     userId: {
         type: DataTypes.INTEGER,
         allowNull: false,

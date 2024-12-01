@@ -9,7 +9,8 @@ export const createSerie = async (req, res) => {
       weight,
       repetition,
       unit,
-      activityId
+      activityId,
+      completed: false
     });
 
     res.status(201).json({
@@ -117,6 +118,7 @@ export const updateSerie = async (req, res) => {
     serie.repetition = repetition !== undefined ? repetition : serie.repetition;
     serie.unit = unit !== undefined ? unit : serie.unit;
     
+    
     await serie.save();
     res.status(200).json({
       ok: true,
@@ -158,3 +160,29 @@ export const deleteSerie = async (req, res) => {
     });
   }
 };
+
+export const completedSerie = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const serie = await Serie.findByPk(id);
+    if (!serie) {
+      return res.status(404).json({
+        ok: false,
+        status: 404,
+        body: { message: 'Serie no encontrada' }
+      });
+    }
+    await serie.update({ completed: !serie.completed });
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      body: { message: 'Serie actualizada' }
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      status: 500,
+      body: { message: 'Error al eliminar la serie', error }
+    });
+  }
+}

@@ -11,6 +11,7 @@ import Serie from "./serieModel.js";
 import Rol from "./rolModel.js";
 import PreferenceUser from "./preferenceUser.js";
 import ActivePlan from "./activePlanModel.js";
+import WorkoutSession from "./workoutSessionModel.js";
 
 // RELACIÓN USUARIO-PLAN -- ONE TO MANY 
 User.hasMany(Plan, { foreignKey: 'userId' });
@@ -51,4 +52,8 @@ PreferenceUser.belongsTo(User, { foreignKey: 'userId' });
 User.hasOne(ActivePlan, { foreignKey: 'userId' });
 ActivePlan.belongsTo(User, { foreignKey: 'userId' });
 
-export { Exercise, User, Plan, Routine, Activity, BodyPart, Category, Serie, Rol, PreferenceUser, ActivePlan };
+Routine.hasMany(WorkoutSession, { foreignKey: 'routineId' });
+WorkoutSession.belongsTo(Routine, { foreignKey: 'routineId' });
+
+
+export { Exercise, User, Plan, Routine, Activity, BodyPart, Category, Serie, Rol, PreferenceUser, ActivePlan,WorkoutSession };

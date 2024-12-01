@@ -39,8 +39,9 @@ export const createActivity = async (req, res) => {
           await Serie.create({
             weight: 0, // Peso representativo
             repetition: 6, // Repeticiones para fuerza
-            unit: "kg",
-            activityId: newActivity.id
+            unit: preference.unitWeight,
+            activityId: newActivity.id,
+            completed: false
           });
         }
         break;
@@ -50,8 +51,9 @@ export const createActivity = async (req, res) => {
           await Serie.create({
             weight: 0, // Peso representativo
             repetition: 10, // Repeticiones para hipertrofia
-            unit: "kg",
-            activityId: newActivity.id
+            unit: preference.unitWeight,
+            activityId: newActivity.id,
+            completed: false
           });
         }
         break;
@@ -61,8 +63,9 @@ export const createActivity = async (req, res) => {
           await Serie.create({
             weight: 0, // Peso ligero para calentamiento
             repetition: 12, // Repeticiones para calentamiento
-            unit: "kg",
-            activityId: newActivity.id
+            unit: preference.unitWeight,
+            activityId: newActivity.id,
+            completed: false
           });
         }
         break;
@@ -72,8 +75,9 @@ export const createActivity = async (req, res) => {
           await Serie.create({
             weight: 0, // Peso representativo
             repetition: 15, // Repeticiones para llegar al fallo
-            unit: "kg",
-            activityId: newActivity.id
+            unit: preference.unitWeight,
+            activityId: newActivity.id,
+            completed: false
           });
         }
         break;
@@ -82,8 +86,9 @@ export const createActivity = async (req, res) => {
         await Serie.create({
           weight: 0, // Peso inicial
           repetition: 0, // Repeticiones iniciales
-          unit: "kg",
-          activityId: newActivity.id
+          unit: preference.unitWeight,
+          activityId: newActivity.id,
+          completed: false
         });
         break;
     

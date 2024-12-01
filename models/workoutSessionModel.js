@@ -18,7 +18,11 @@ const WorkoutSession = db.define('workout_session', {
     endTime: {
         type: DataTypes.DATE,
         allowNull: true,
-    }
+    },
+    completed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+    },
 });
 
-export default Serie;
+export default WorkoutSession;

@@ -22,6 +22,8 @@ export const login = async (req, res) => {
     }
 
     const isValid = await bcrypt.compare(password, user.password);
+    console.log(user);
+    
     
     
     if (!isValid) {
@@ -34,7 +36,7 @@ export const login = async (req, res) => {
 
     const payload = { user: user};
     const token = jwt.sign(payload, JWT_SECRET_KEY, {
-      expiresIn: '1h',
+      expiresIn: '24h',
     });
 
     const data = {
@@ -46,7 +48,7 @@ export const login = async (req, res) => {
         httpOnly: true,
         secure: NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 1000 * 60 * 60, // 1 hora
+        maxAge: 1000 * 60 * 60 * 24, // 24 horas
       })
       .status(200)
       .json({

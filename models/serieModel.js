@@ -19,6 +19,10 @@ const Serie = db.define('Series', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    completed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+    },
     activityId: {
         type: DataTypes.INTEGER,
         allowNull: false,

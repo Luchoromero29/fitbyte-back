@@ -11,7 +11,7 @@ import db from './config/db.js';
 import userRouter from './routes/userRoutes.js';
 import singinRouter from './routes/singinRoutes.js';
 import categoryRouter from './routes/categoryRoutes.js';
-import { Rol, User, Category, BodyPart } from './models/index.js';
+import { Rol, User, Category, BodyPart, PreferenceUser } from './models/index.js';
 import bodyPartRouter from './routes/bodyPartRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import isAuth from './middlewares/auth.js';
@@ -21,6 +21,8 @@ import activityRouter from './routes/activityRoutes.js';
 import serieRouter from './routes/serieRoutes.js';
 import preferenceUserRouter from './routes/preferenceUserRoutes.js';
 import activePlanRouter from './routes/activePlanRoute.js';
+
+
 
 
 dotenv.config();
@@ -81,7 +83,7 @@ const initializeRoles = async () => {
   const bodyparts = ["Biceps", "Triceps", "Pectoral", "Espalda", "Cuadriceps", "Piernas", "Isquiotibiales", "Gemelos", "Antebrazos", "Hombros", "Gluteos", "Abdominales", "Trapecio"];
   const hashedPassword = await bcrypt.hash('root', SALT_ROUNDS);
   
-  await User.findOrCreate({
+  const adminUser = await User.findOrCreate({
     where: {
       rolId: 1,
       name: 'Luciano',
@@ -93,21 +95,31 @@ const initializeRoles = async () => {
     },
   });
   
-  for (let i = 0; i < categories.length; i++) {
-    await cargarCategorias(categories[i]);
-  }
+  console.log("El usuario es: ", adminUser[0].dataValues.id);
   
-  async function cargarCategorias(name) {
-    await Category.findOrCreate({ where: { name: name } });
-  }
+  await PreferenceUser.create({
+    userId: adminUser[0].dataValues.id,
+    unitWeight: "KG",
+    language: "ES",
+    theme: "light",
+    customMode: false
+  });
   
-  for (let i = 0; i < bodyparts.length; i++) {
-    await cargarBodyPart(bodyparts[i]);
-  }
+  // for (let i = 0; i < categories.length; i++) {
+  //   await cargarCategorias(categories[i]);
+  // }
+  
+  // async function cargarCategorias(name) {
+  //   await Category.findOrCreate({ where: { name: name } });
+  // }
+  
+  // for (let i = 0; i < bodyparts.length; i++) {
+  //   await cargarBodyPart(bodyparts[i]);
+  // }
 
-  async function cargarBodyPart(name) {
-    await BodyPart.findOrCreate({ where: { name: name } });
-  }
+  // async function cargarBodyPart(name) {
+  //   await BodyPart.findOrCreate({ where: { name: name } });
+  // }
 };
 
 // Sincronizar base de datos
@@ -122,7 +134,7 @@ db.authenticate()
 })
 .then(() => {
   console.log('Database synchronized!');
-  //return initializeRoles(); // Asegúrate de que se ejecuta después de la sincronización
+  return initializeRoles(); // Asegúrate de que se ejecuta después de la sincronización
 })
 .catch((error) => {
   console.error('Error al conectar a la base de datos:', error);
